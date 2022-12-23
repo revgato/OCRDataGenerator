@@ -1,13 +1,13 @@
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 
 class Generator:
-    def __init__(self, size, n_row = 3, n_column = None, dictionary):
+    def __init__(self, size, dictionary, n_row = 3, n_column = None):
 
         self.size = size
         self.n_row = n_row
         self.n_column = n_column
         self.image = Image.new("RGB", size, color=(255, 255, 255))
-        self.draw = ImageDraw.Draw(image)
+        self.draw = ImageDraw.Draw(self.image)
         
         with open(dictionary) as f:
             self.dictionary = f.read().splitlines()
