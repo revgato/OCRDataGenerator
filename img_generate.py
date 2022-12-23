@@ -21,15 +21,21 @@ with open("dict.txt") as f:
 PATH = os.getcwd()
 
 # create the image with the specified background
-background_path = os.path.join(PATH, args.background, random.choice(os.listdir(args.background)))
+background_path = os.path.join(PATH, args.background)
 dictionary_path = os.path.join(PATH, args.dictionary)
-generator = Generator(size = A4_size, dictionary=dictionary_path)
+font_path = os.path.join(PATH, args.font)
 
-font_path = os.path.join(PATH, args.font, random.choice(os.listdir(args.font)))
+generator = Generator(size = A4_size, dictionary_path=dictionary_path, background_path=background_path, font_path=font_path)
 
-image = generator.add_background(background_path)
-image, text_boxes = generator.add_text(font_path, text_color=args.color)
+
+# image = generator.add_background(background_path)
+image, text_boxes = generator.add_text(text_color=args.color)
 # print(text_boxes)
 
 # save the image
 image.save("image.jpg")
+
+image, text_boxes = generator.add_text(text_color=args.color)
+
+image.save("image2.jpg")
+
