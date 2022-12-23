@@ -1,3 +1,4 @@
+# python img_generate.py --font ../fonts/ko --background ../TextRecognitionDataGenerator/trdg/images/ --color black --dictionary dict.txt
 import argparse
 import random
 import os
@@ -29,7 +30,7 @@ generator = Generator(size = A4_size, dictionary_path=dictionary_path, backgroun
 
 
 # image = generator.add_background(background_path)
-image, text_boxes = generator.add_text(text_color=args.color)
+image, text_boxes = generator.add_text(text_size = 100, text_color=args.color)
 # print(text_boxes)
 
 # save the image

@@ -3,7 +3,7 @@ import random
 import os
 
 class Generator:
-    def __init__(self, size, dictionary_path, background_path, font_path, n_row = 3, n_column = None):
+    def __init__(self, size, dictionary_path, background_path, font_path, n_row = 3, n_column = 15):
 
         self.size = size
         self.n_row = n_row
@@ -39,16 +39,16 @@ class Generator:
             for j in range(0, width, background_width):
                 self.image.paste(background, (j, i))
 
-    def add_text(self, text_size = 30, text_color = "white"):
+    def add_text(self, text_size = 30, text_color = "white", margin = (20, 20)):
         
         self.add_background()
         text_bboxes = []
         font_path = os.path.join(self.font_path, random.choice(os.listdir(self.font_path)))
         font = ImageFont.truetype(f"{font_path}", size = text_size)
-        for i in range(10):
-            for j in range(2):
-                x = 10 + j * 1050
-                y = 10 + i * 148
+        for i in range(self.n_column):
+            for j in range(self.n_row):
+                x = margin[0] + j * 1050
+                y = margin[1] + i * 148
         
                 text = random.choice(self.dictionary)
                 # Draw text and save the text box
@@ -57,6 +57,9 @@ class Generator:
                 self.draw.text((x, y), text, font=font, fill=text_color)
                 self.draw.rectangle((x, y, x + width, y + height), outline="red")
         return self.image, text_bboxes
+
+    # def fit_text(self, text, text_size, margin):
+    #     max_width = self.size[0]//3 - margin[0]
 
     
 
