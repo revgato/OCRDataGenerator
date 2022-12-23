@@ -24,7 +24,7 @@ def add_background(image, background_path, horizontal = 3, vertical = None):
 
     return image
 
-def add_text(image, font, text, text_size = 20, text_color = "white"):
+def add_text(image, font, text, text_size = 30, text_color = "white"):
     draw = ImageDraw.Draw(image)
 
     text_bboxes = []
