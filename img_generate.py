@@ -30,13 +30,13 @@ generator = Generator(size = A4_size, dictionary_path=dictionary_path, backgroun
 
 
 # image = generator.add_background(background_path)
-image, text_boxes = generator.add_text(text_size = 100, text_color=args.color)
+image, text_boxes = generator.add_text(text_size = 30, text_color=args.color, n_column=2)
 # print(text_boxes)
 
 # save the image
 image.save("image.jpg")
 
-image, text_boxes = generator.add_text(text_color=args.color)
+image, text_boxes = generator.add_text(text_size = 100, text_color=args.color)
 
 image.save("image2.jpg")
 
