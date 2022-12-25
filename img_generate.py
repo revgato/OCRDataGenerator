@@ -14,6 +14,10 @@ parser.add_argument("--background", required=True, help="folder containing backg
 parser.add_argument("--color", required=True, help="font color")
 parser.add_argument("--dictionary", required=True, help="dictionary file")
 parser.add_argument("--output", default="outputs", help="output folder")
+parser.add_argument("--n", default=1, help="number of images to generate")
+parser.add_argument("--size", default=30, help="font size")
+parser.add_argument("--column", default=2, help="number of column")
+parser.add_argument("--row", default=15, help="number of row")
 args = parser.parse_args()
 
 # read the dictionary file
