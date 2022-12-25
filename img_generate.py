@@ -11,13 +11,16 @@ A4_size = (1240, 1754)    # (A4 paper (150 PPI)
 parser = argparse.ArgumentParser()
 parser.add_argument("--font", required=True, help="folder containing font")
 parser.add_argument("--background", required=True, help="folder containing background image")
-parser.add_argument("--color", required=True, help="font color")
+# parser.add_argument("--color", required=True, help="font color")
 parser.add_argument("--dictionary", required=True, help="dictionary file")
 parser.add_argument("--output", default="outputs", help="output folder")
-parser.add_argument("--n", default=1, help="number of images to generate")
-parser.add_argument("--size", default=30, help="font size")
-parser.add_argument("--column", default=2, help="number of column")
-parser.add_argument("--row", default=15, help="number of row")
+parser.add_argument("--n", default=1, type=int, help="number of images to generate")
+parser.add_argument("--size", default=30, type=int, help="font size")
+parser.add_argument("--column", default=2, type=int, help="number of column")
+parser.add_argument("--row", default=15, type=int, help="number of row")
+parser.add_argument("--line_spacing", default=10, type=int, help="line spacing")
+parser.add_argument("--margin_x", default=20, type=int, help="margin of x")
+parser.add_argument("--margin_y", default=20, type=int, help="margin of y")
 args = parser.parse_args()
 
 # read the dictionary file
@@ -36,13 +39,9 @@ generator = Generator(size = A4_size, dictionary_path=dictionary_path, backgroun
 
 
 # image = generator.add_background(background_path)
-image, text_boxes = generator.add_text(text_size = 30, text_color=args.color, n_column=2)
-# print(text_boxes)
+image, text_boxes = generator.generate(text_size = args.size, n_column=args.column, n_row=args.row, 
+    line_spacing=args.line_spacing, margin=(args.margin_x, args.margin_y))
 
 # save the image
 image.save(os.path.join(output_path, "image1.jpg"))
-
-image, text_boxes = generator.add_text(text_size = 100, text_color=args.color)
-
-image.save(os.path.join(output_path, "image2.jpg"))
 

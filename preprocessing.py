@@ -9,7 +9,7 @@ class Generator:
         self.image = Image.new("RGB", size, color=(255, 255, 255))
         self.draw = ImageDraw.Draw(self.image)
         self.background_path = background_path
-        self.font_path = font_path
+        self.font_path = font_path        
         
         with open(dictionary_path) as f:
             self.dictionary = f.read().splitlines()
@@ -39,7 +39,7 @@ class Generator:
             for j in range(0, width, background_width):
                 self.image.paste(background, (j, i))
 
-    def add_text(self, text_size = 30, text_color = "white", margin = (20, 20), 
+    def generate(self, text_size = 30, margin = (20, 20),
                  n_row = 15, n_column = 4, line_spacing = 10):
         
         # Generate image with background
@@ -53,9 +53,14 @@ class Generator:
 
         # Calculate the max width of the text
         max_width = self.size[0]//n_column - 2*margin[0]
+        max_height = self.size[1]//n_row - 2*margin[1] - line_spacing//2
 
         # Add text to the image
         x, y = margin[0], margin[1]
+
+        # Estimating color of text
+        color = self.color_estimation()
+
         for i in range(n_row):
             for j in range(n_column):
 
@@ -74,7 +79,7 @@ class Generator:
             
                 # Draw text and save the text box
                 text_bboxes.append((x, x + width, y, y + height))
-                self.draw.text((x, y), text, font=font, fill=text_color)
+                self.draw.text((x, y), text, font=font, fill=color)
                 self.draw.rectangle((x, y, x + width, y + height), outline="red")
                 x = x + max_width + 2*margin[0]
 
@@ -82,6 +87,26 @@ class Generator:
             y = y + height + line_spacing
 
         return self.image, text_bboxes
+
+    def color_estimation(self):
+        # Get the average color of the image
+        width, height = self.image.size
+
+        # Get the average color of the image
+        pixels = self.image.load()
+        r, g, b = 0, 0, 0
+        for i in range(width):
+            for j in range(height):
+                r += pixels[i, j][0]
+                g += pixels[i, j][1]
+                b += pixels[i, j][2]
+        r = r//(width*height)
+        g = g//(width*height)
+        b = b//(width*height)
+
+        # Return the opposite color of the average color
+        return (255 - r, 255 - g, 255 - b)
+
 
 
     
