@@ -1,4 +1,4 @@
-# python img_generate.py --font fonts --background images --color black --dictionary dict.txt
+# python img_generate.py --font fonts --background images --dictionary dict.txt
 import argparse
 import random
 import os
@@ -39,9 +39,9 @@ generator = Generator(size = A4_size, dictionary_path=dictionary_path, backgroun
 
 
 # image = generator.add_background(background_path)
-image, text_boxes = generator.generate(text_size = args.size, n_column=args.column, n_row=args.row, 
+generator.generate(output_path, args.n , text_size = args.size, n_column=args.column, n_row=args.row, 
     line_spacing=args.line_spacing, margin=(args.margin_x, args.margin_y))
 
 # save the image
-image.save(os.path.join(output_path, "image1.jpg"))
+# image.save(os.path.join(output_path, "image1.jpg"))
 

@@ -1,6 +1,7 @@
 from PIL import Image, ImageDraw, ImageFont
 import random
 import os
+import numpy as np
 
 class Generator:
     def __init__(self, size, dictionary_path, background_path, font_path):
@@ -39,73 +40,83 @@ class Generator:
             for j in range(0, width, background_width):
                 self.image.paste(background, (j, i))
 
-    def generate(self, text_size = 30, margin = (20, 20),
+    def generate(self, output_folder, n = 1, text_size = 30, margin = (20, 20),
                  n_row = 15, n_column = 4, line_spacing = 10):
         
-        # Generate image with background
-        self.add_background()
+        output_folder = self.check_output_folder_name(output_folder)
+        for k in range(n):
+            # Generate image with background
+            self.add_background()
 
-        text_bboxes = []
+            text_bboxes = []
 
-        # Select random font
-        font_path = os.path.join(self.font_path, random.choice(os.listdir(self.font_path)))
-        font = ImageFont.truetype(f"{font_path}", size = text_size)
+            # Select random font
+            font_path = os.path.join(self.font_path, random.choice(os.listdir(self.font_path)))
+            font = ImageFont.truetype(f"{font_path}", size = text_size)
 
-        # Calculate the max width of the text
-        max_width = self.size[0]//n_column - 2*margin[0]
-        max_height = self.size[1]//n_row - 2*margin[1] - line_spacing//2
+            # Calculate the max width of the text
+            max_width = self.size[0]//n_column - 2*margin[0]
+            max_height = self.size[1]//n_row - 2*margin[1] - line_spacing//2
 
-        # Add text to the image
-        x, y = margin[0], margin[1]
+            # Add text to the image
+            x, y = margin[0], margin[1]
 
-        # Estimating color of text
-        color = self.color_estimation()
+            # Estimating color of text
+            color = self.color_estimation()
+            # color = 'black'
 
-        for i in range(n_row):
-            for j in range(n_column):
+            for i in range(n_row):
+                for j in range(n_column):
 
-                # Select random text
-                text = random.choice(self.dictionary)
+                    # Select random text
+                    text = random.choice(self.dictionary)
 
-                # Crop the text if it is longer than the max width
-                width, height = self.draw.textsize(text, font = font)
-                char_width = width//len(text)
-                if width > max_width:
-                    text_length = max_width//char_width
-                    text = text[:text_length]
+                    # Crop the text if it is longer than the max width
+                    width, height = self.draw.textsize(text, font = font)
+                    char_width = width//len(text)
+                    if width > max_width:
+                        text_length = max_width//char_width
+                        text = text[:text_length]
 
-                # Recalculate the width and height of the text
-                width, height = self.draw.textsize(text, font = font)
+                    # Recalculate the width and height of the text
+                    width, height = self.draw.textsize(text, font = font)
+                
+                    # Draw text and save the text box
+                    text_bboxes.append((x, x + width, y, y + height))
+                    self.draw.text((x, y), text, font=font, fill=color)
+                    self.draw.rectangle((x, y, x + width, y + height), outline="red")
+                    x = x + max_width + 2*margin[0]
+
+                x = margin[0]    
+                y = y + height + line_spacing
             
-                # Draw text and save the text box
-                text_bboxes.append((x, x + width, y, y + height))
-                self.draw.text((x, y), text, font=font, fill=color)
-                self.draw.rectangle((x, y, x + width, y + height), outline="red")
-                x = x + max_width + 2*margin[0]
+            self.image.save(os.path.join(output_folder, f"image{k}.png"))
+            print(f"Generated {k}/{n} images")
 
-            x = margin[0]    
-            y = y + height + line_spacing
-
-        return self.image, text_bboxes
+        # return self.image, text_bboxes
 
     def color_estimation(self):
-        # Get the average color of the image
-        width, height = self.image.size
+
+        # Convert the image to numpy array
+        image = np.array(self.image)
 
         # Get the average color of the image
-        pixels = self.image.load()
-        r, g, b = 0, 0, 0
-        for i in range(width):
-            for j in range(height):
-                r += pixels[i, j][0]
-                g += pixels[i, j][1]
-                b += pixels[i, j][2]
-        r = r//(width*height)
-        g = g//(width*height)
-        b = b//(width*height)
-
+        r, g, b = image.mean(axis=0).mean(axis=0)
+        r, g, b = int(r), int(g), int(b)
+        
         # Return the opposite color of the average color
         return (255 - r, 255 - g, 255 - b)
+
+    def check_output_folder_name(self, output_folder):
+        if not os.path.exists(output_folder):
+            os.makedirs(output_folder)
+            return output_folder
+        
+        i = 1
+        while(os.path.exists(f"output_folder{i}")):
+            i += 1
+        os.makedirs(f"output_folder{i}")
+        return f"output_folder{i}"
 
 
 
