@@ -98,7 +98,7 @@ class Generator:
 
 
                     # If the text is out of the image, break the loop
-                    if y > self.size[1]:
+                    if y > self.size[1] - margin[1]:
                         break
                 
                 self.image.save(os.path.join(output_folder, f"image{k}.png"))
