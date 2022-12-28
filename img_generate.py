@@ -1,4 +1,4 @@
-# python img_generate.py --font fonts --background images_test --dictionary dicts/dict_mail.txt
+# python img_generate.py --font fonts --background images --dictionary dicts/dict_mail.txt
 import argparse
 import random
 import os
