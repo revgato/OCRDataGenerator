@@ -4,13 +4,14 @@ import os
 import numpy as np
 
 class Generator:
-    def __init__(self, size, dictionary_path, background_path, font_path):
+    def __init__(self, size, dictionary_path, background_path, font_path, color_shift):
 
         self.size = size
         self.image = Image.new("RGB", size, color=(255, 255, 255))
         self.draw = ImageDraw.Draw(self.image)
         self.background_path = background_path
-        self.font_path = font_path        
+        self.font_path = font_path    
+        self.color_shift = color_shift    
         
         with open(dictionary_path) as f:
             self.dictionary = f.read().splitlines()
@@ -114,6 +115,13 @@ class Generator:
         # Get the average color of the image
         r, g, b = image.mean(axis=0).mean(axis=0)
         r, g, b = int(r), int(g), int(b)
+
+        # Ranfom color shifting
+        shift = self.color_shift
+
+        r = min(255, max(0, r + random.randint(-shift, shift)))
+        g = min(255, max(0, g + random.randint(-shift, shift)))
+        b = min(255, max(0, b + random.randint(-shift, shift)))
         
         # Return the opposite color of the average color
         return (255 - r, 255 - g, 255 - b)

@@ -21,6 +21,7 @@ parser.add_argument("--row", default=30, type=int, help="number of row")
 parser.add_argument("--line_spacing", default=50, type=int, help="line spacing")
 parser.add_argument("--margin_x", default=30, type=int, help="margin of x")
 parser.add_argument("--margin_y", default=30, type=int, help="margin of y")
+parser.add_argument("--color_shift", default=100, type=int, help="maximum value of color random shift")
 args = parser.parse_args()
 
 PATH = os.getcwd()
@@ -32,7 +33,7 @@ font_path = os.path.join(PATH, args.font)
 output_path = os.path.join(PATH, args.output)
 
 # Create the generator
-generator = Generator(size = A4_size, dictionary_path=dictionary_path, background_path=background_path, font_path=font_path)
+generator = Generator(size = A4_size, dictionary_path=dictionary_path, background_path=background_path, font_path=font_path, color_shift=args.color_shift)
 
 # Generate the image
 generator.generate(output_path, args.n , text_size = args.size, n_column=args.column, n_row=args.row, 
