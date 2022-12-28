@@ -45,53 +45,64 @@ class Generator:
         
         output_folder = self.check_output_folder_name(output_folder)
         for k in range(n):
-            # Generate image with background
-            self.add_background()
+            with open(os.path.join(output_folder, f"image{k}.txt"), "w") as f:
+                # Generate image with background
+                self.add_background()
 
-            text_bboxes = []
+                # text_bboxes = []          # Uncomment this line if you want to return the text box
 
-            # Select random font
-            font_path = os.path.join(self.font_path, random.choice(os.listdir(self.font_path)))
-            font = ImageFont.truetype(f"{font_path}", size = text_size)
+                # Select random font
+                font_path = os.path.join(self.font_path, random.choice(os.listdir(self.font_path)))
+                font = ImageFont.truetype(f"{font_path}", size = text_size)
 
-            # Calculate the max width of the text
-            max_width = self.size[0]//n_column - 2*margin[0]
-            max_height = self.size[1]//n_row - 2*margin[1] - line_spacing//2
+                # Calculate the max width of the text
+                max_width = self.size[0]//n_column - 2*margin[0]
+                # max_height = self.size[1]//n_row - 2*margin[1] - line_spacing//2
 
-            # Add text to the image
-            x, y = margin[0], margin[1]
+                # Add text to the image
+                x, y = margin[0], margin[1]
 
-            # Estimating color of text
-            color = self.color_estimation()
-            # color = 'black'
+                # Estimating color of text
+                color = self.color_estimation()
+                # color = 'black'
 
-            for i in range(n_row):
-                for j in range(n_column):
+                for i in range(n_row):
+                    for j in range(n_column):
 
-                    # Select random text
-                    text = random.choice(self.dictionary)
+                        # Select random text
+                        text = random.choice(self.dictionary)
 
-                    # Crop the text if it is longer than the max width
-                    width, height = self.draw.textsize(text, font = font)
-                    char_width = width//len(text)
-                    if width > max_width:
-                        text_length = max_width//char_width
-                        text = text[:text_length]
+                        # Write text to the file
 
-                    # Recalculate the width and height of the text
-                    width, height = self.draw.textsize(text, font = font)
+                        # Crop the text if it is longer than the max width
+                        width, height = self.draw.textsize(text, font = font)
+                        char_width = width//len(text)
+                        if width > max_width:
+                            text_length = max_width//char_width
+                            text = text[:text_length]
+                        
+                        f.write(text + "\n")
+
+                        # Recalculate the width and height of the text
+                        # width, height = self.draw.textsize(text, font = font)       # Uncomment this line if you want to return the text box
+                    
+                        # Draw text and save the text box
+                        # text_bboxes.append((x, x + width, y, y + height))         # Uncomment this line if you want to return the text box
+                        self.draw.text((x, y), text, font=font, fill=color)
+                        # self.draw.rectangle((x, y, x + width, y + height), outline="red")         # Uncomment this line if you want to return the text box
+                        x = x + max_width + 2*margin[0]
+
+                    x = margin[0]    
+                    # y = y + max_height + line_spacing
+                    y = y + height + line_spacing
+
+
+                    # If the text is out of the image, break the loop
+                    if y > self.size[1]:
+                        break
                 
-                    # Draw text and save the text box
-                    text_bboxes.append((x, x + width, y, y + height))
-                    self.draw.text((x, y), text, font=font, fill=color)
-                    self.draw.rectangle((x, y, x + width, y + height), outline="red")
-                    x = x + max_width + 2*margin[0]
-
-                x = margin[0]    
-                y = y + height + line_spacing
-            
-            self.image.save(os.path.join(output_folder, f"image{k}.png"))
-            print(f"Generated {k}/{n} images")
+                self.image.save(os.path.join(output_folder, f"image{k}.png"))
+                print(f"Generated {k+1}/{n} images")
 
         # return self.image, text_bboxes
 
@@ -113,10 +124,10 @@ class Generator:
             return output_folder
         
         i = 1
-        while(os.path.exists(f"output_folder{i}")):
+        while(os.path.exists(f"{output_folder}{i}")):
             i += 1
-        os.makedirs(f"output_folder{i}")
-        return f"output_folder{i}"
+        os.makedirs(f"{output_folder}{i}")
+        return f"{output_folder}{i}"
 
 
 
