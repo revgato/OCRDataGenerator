@@ -42,7 +42,7 @@ class Generator:
                 self.image.paste(background, (j, i))
 
     def generate(self, output_folder, n = 1, text_size = 30, margin = (20, 20),
-                 n_row = 15, n_column = 4, line_spacing = 10):
+                 n_row = 15, n_column = 4, line_spacing = 10, type = "jpg"):
         
         output_folder = self.check_output_folder_name(output_folder)
         for k in range(n):
@@ -58,7 +58,7 @@ class Generator:
 
                 # Calculate the max width of the text
                 max_width = self.size[0]//n_column - 2*margin[0]
-                # max_height = self.size[1]//n_row - 2*margin[1] - line_spacing//2
+                max_height = (self.size[1] - 2*margin[1])//n_row
 
                 # Add text to the image
                 x, y = margin[0], margin[1]
@@ -94,15 +94,15 @@ class Generator:
                         x = x + max_width + 2*margin[0]
 
                     x = margin[0]    
-                    # y = y + max_height + line_spacing
-                    y = y + height + line_spacing
+                    y = y + max_height
+                    # y = y + height + line_spacing
 
 
                     # If the text is out of the image, break the loop
                     if y > self.size[1] - margin[1]:
                         break
                 
-                self.image.save(os.path.join(output_folder, f"image{k}.png"))
+                self.image.save(os.path.join(output_folder, f"image{k}.{type}"))
                 print(f"Generated {k+1}/{n} images")
 
         # return self.image, text_bboxes
