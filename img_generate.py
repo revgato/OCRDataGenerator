@@ -21,7 +21,7 @@ parser.add_argument("--row", default=30, type=int, help="number of row")
 # parser.add_argument("--line_spacing", default=3, type=int, help="line spacing")
 parser.add_argument("--margin_x", default=30, type=int, help="margin of x")
 parser.add_argument("--margin_y", default=30, type=int, help="margin of y")
-parser.add_argument("--color_shift", default=100, type=int, help="maximum value of color random shift")
+parser.add_argument("--color_shift", default=50, type=int, help="maximum value of color random shift")
 parser.add_argument("--type", default="jpg", help="output image type")
 args = parser.parse_args()
 
