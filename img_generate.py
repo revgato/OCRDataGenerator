@@ -1,4 +1,4 @@
-# python img_generate.py --font /content/fonts/ko --background TextRecognitionDataGenerator/trdg/images --dictionary all_dict.txt --n 800 --row 20 --output /content/A4_outputs
+# python img_generate.py --font ../fonts/ko --background ../TextRecognitionDataGenerator/trdg/images --dictionary all_dict.txt --n 8 --row 20 --output ../A4_outputs
 import argparse
 import random
 import os
@@ -28,7 +28,7 @@ args = parser.parse_args()
 PATH = os.getcwd()
 
 # create the image with the specified background
-background_path = os.path.join(PATH, args.background)
+background_path = os.path.abspath(args.background)
 dictionary_path = os.path.join(PATH, args.dictionary)
 font_path = os.path.join(PATH, args.font)
 output_path = os.path.join(PATH, args.output)
