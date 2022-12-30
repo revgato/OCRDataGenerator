@@ -72,6 +72,8 @@ class Generator:
 
                         # Select random text
                         text = random.choice(self.dictionary)
+                        while(len(text) == 0):
+                            text = random.choice(self.dictionary)
 
                         # Write text to the file
 
