@@ -1,4 +1,4 @@
-# python img_generate.py --font fonts --background all_images --dictionary all_dict.txt --n 3 --row 20
+# python img_generate.py --font /content/fonts/ko --background TextRecognitionDataGenerator/trdg/images --dictionary all_dict.txt --n 800 --row 20 --output /content/A4_outputs
 import argparse
 import random
 import os
